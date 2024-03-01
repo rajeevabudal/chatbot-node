@@ -1,28 +1,14 @@
-var longestPalindrome = function (s) {
-  let count = -1;
-  let ans = '';
-  const len = s.length;
+const OpenAI = require("openai");
+const apiKey = "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"
+const openai = new OpenAI({apiKey});
 
-  const dp = Array.from({ length: len }, () => Array(len).fill(false));
+async function main() {
+  const completion = await openai.chat.completions.create({
+    messages: [{ role: "system", content: "You are a helpful assistant." }],
+    model: "gpt-3.5-turbo",
+  });
 
-  for (let g = 0; g < len; g++) {
-    for (let i = 0, j = g; j < len; i++, j++) {
-      if (g === 0) {
-        dp[i][j] = true;
-      } else if (g === 1) {
-        dp[i][j] = s[i] === s[j];
-      } else {
-        dp[i][j] = s[i] === s[j] && dp[i + 1][j - 1];
-      }
+  console.log(completion.choices[0]);
+}
 
-      if (dp[i][j] && count < j - i + 1) {
-        ans = s.substring(i, j + 1);
-        count = ans.length;
-      }
-    }
-  }
-  return ans;
-};
-
-let str = longestPalindrome('babad');
-console.log(str);
+main();
